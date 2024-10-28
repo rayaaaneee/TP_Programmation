@@ -27,32 +27,13 @@ float get_result(Operation operation) {
     }
 }
 
-float get_operations_result(Operation* operations, int operation_count) {
-    float result = 0;
-
-    for (int i = 0; i < operation_count; i++) {
-        if (operations[i].priority == 1 && operations[i].result == 0F) {
-            if (operations[i + 1])
-            operations[i].result = get_result(operations[i]);
-        } else if (operations[i].priority == 0) {
-            result = get_result(operations[i]);
-        }
-    }
-    return result;
-}
-
 void print_result(Operation operation) {
     float result = get_result(operation);
     printf("Result : %s %s %s = %.2f\n", operation.operand1.value, operation.main_operator.value, operation.operand2.value, result);
 }
 
-void print_results(const char *input, Operation* operations, int operation_count) {
-    float result = get_operations_result(operations, operation_count);
-    printf("Result of %s = %.2f\n", input, result);
-}
-
 int main() {
-    const char *input = "2 * 5 * 3 + 3";
+    const char *input = "2.3 + 5.5";
     const char *p = input;
     Token token;
     Token *tokens = malloc(100 * sizeof(Token));
@@ -63,11 +44,9 @@ int main() {
         if (token.type != TOKEN_END) tokens[token_count++] = token;
     } while (token.type != TOKEN_END);
     
-    ProcessTokensResult result = process_tokens(tokens, token_count);
-    Operation *operations = result.operations;
-    int operation_count = result.operation_count;
-    print_operations(operations, operation_count);
-    print_results(input, operations, operation_count);
+    Operation operation = process_tokens(tokens, token_count);
+
+    print_result(operation);
     
     return 0;
 }
