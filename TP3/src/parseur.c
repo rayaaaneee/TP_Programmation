@@ -5,6 +5,7 @@
 
 bool verify_operation(Operation operation) {
     bool result = true;
+    // On vérifie les types des tokens de l'opérateur et des opérandes
     if (operation.main_operator.type != TOKEN_OPERATOR && operation.main_operator.type != TOKEN_UNKNOWN) {
         printf("Error in operator type\n");
         result = false;
@@ -25,26 +26,26 @@ Operation process_tokens(Token* tokens, int token_count) {
     
     Operation operation = (Operation) {};
 
+    // On vérifie qu'on a bien 3 tokens
     for (int i = 0; i < token_count; i++) {
-        switch (i)
-        {
-        case 0:
-            operation.operand1 = tokens[i];
-            
-            break;
-        case 1:
-            operation.main_operator = tokens[i];
-            break;
-        case 2:
-            operation.operand2 = tokens[i];
-            break;
-        default:
-            printf("Error, too many tokens\n");
-            exit(1);
-            break;
+        switch (i) {
+            case 0:
+                operation.operand1 = tokens[i];
+                break;
+            case 1:
+                operation.main_operator = tokens[i];
+                break;
+            case 2:
+                operation.operand2 = tokens[i];
+                break;
+            default:
+                printf("Error, too many tokens\n");
+                exit(1);
+                break;
         }
     }
 
+    // On vérifie que l'opération est valide
     if (!verify_operation(operation)) {
         exit(1);
     }

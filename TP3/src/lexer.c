@@ -1,7 +1,7 @@
 #include"lexer.h"
-#include"stdio.h"
-#include"ctype.h"
-#include"string.h"
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
 
 void print_tokens(Token* tokens, int token_count) {
     for (int i = 0; i < token_count; i++) {
@@ -10,6 +10,7 @@ void print_tokens(Token* tokens, int token_count) {
 }
 
 void print_token(Token token) {
+    // Afficher le token selon son type
     switch (token.type) {
         case TOKEN_NUMBER:
             printf("Number: %s\n", token.value);
@@ -27,12 +28,15 @@ void print_token(Token token) {
 }
 
 Token get_next_token(const char **input) {
+    // Ignorer les espaces
     while (isspace(**input)) (*input)++;
 
+    // Fin de l'entrée
     if (**input == '\0') {
         return (Token){TOKEN_END, ""};
     }
 
+    // Nombre
     if (isdigit(**input) || **input == '.') {
         Token token = {TOKEN_NUMBER, ""};
         int i = 0;
@@ -43,6 +47,7 @@ Token get_next_token(const char **input) {
         return token;
     }
 
+    // Opérateur
     if (strchr("+-*/", **input)) {
         Token token = {TOKEN_OPERATOR, ""};
         token.value[0] = *(*input)++;
@@ -50,8 +55,10 @@ Token get_next_token(const char **input) {
         return token;
     }
 
+    // Token inconnu
     Token token = {TOKEN_UNKNOWN, ""};
     token.value[0] = *(*input)++;
     token.value[1] = '\0';
+
     return token;
 }

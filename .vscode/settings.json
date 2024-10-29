@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "string.h": "c",
+        "wchar.h": "c",
+        "ctype.h": "c",
+        "main.h": "c",
+        "pile.h": "c"
+    }
+}
