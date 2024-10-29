@@ -5,6 +5,39 @@
 #include"main.h"
 #include"interpreteur/pile.h"
 
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void trim(char *str) {
+    char *start = str;
+    char *end;
+
+    // Trim leading whitespace
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    // If the string was all whitespace
+    if (*start == '\0') {
+        str[0] = '\0';
+        return;
+    }
+
+    // Trim trailing whitespace
+    end = start + strlen(start) - 1;
+    while (end > start && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    // Place the null terminator at the end of the trimmed string
+    *(end + 1) = '\0';
+
+    // Shift the trimmed string to the start of the original buffer
+    memmove(str, start, end - start + 2);
+}
+
+
 Variable symbolTable[MAX_VARIABLES];
 int variableCount = 0;
 
@@ -153,9 +186,8 @@ void print_rules() {
     printf("- Tapez une expression de la forme 'nom_variable' ou 'nom_variable = valeur' pour définir ou obtenir la valeur d'une variable.\n");
     printf("- Tapez une expression de la forme '(lambda x.expression) valeur' pour évaluer une expression lambda.\n");
     printf("La valeur de x sera remplacée par la valeur de la variable appelée, une valeur dure peut être mise aussi.\n");
-    printf("Exemple : (lambda x.x+1) 2\n");
-    printf("Exemple : (lambda x.(x+1)*2) y\n");
-    printf("Veuillez ne pas mettre d'espace dans l'expression lambda.\n");
+    printf("Exemple : (lambda x.x + 1) 2\n");
+    printf("Exemple : (lambda x.2 + 3 * x) y\n");
     printf("\n-----------------------------------------------\n\n");
 }
 
@@ -182,7 +214,20 @@ int main() {
             char called_var[MAX_NAME_LEN];
             
             if (sscanf(input, "(lambda x.%[^)]) %s", expr, called_var) == 2) {
-                if (!isdigit(called_var[0])) {
+
+                if (isdigit(called_var[0])) {
+                    char expr_with_replaced_var[100];
+                    strcpy(expr_with_replaced_var, expr);
+                    char *pos = strstr(expr_with_replaced_var, "x");
+                    while (pos != NULL) {
+                        int len = strlen("x");
+                        memmove(pos + strlen(called_var), pos + len, strlen(pos) - len + 1);
+                        memcpy(pos, called_var, strlen(called_var));
+                        pos = strstr(pos + strlen(called_var), "x");
+                    }
+                    strcpy(expr, expr_with_replaced_var);
+                    
+                } else {
                     // remplacer x par la valeur de la variable appelée
                     char expr_with_replaced_var[100];
                     strcpy(expr_with_replaced_var, expr);
@@ -216,8 +261,7 @@ int main() {
                 print_result(expr);
             } else {
                 printf("Erreur : expression lambda mal formatée.\n");
-            }
-            
+            }  
         } else {
             char name[MAX_NAME_LEN];
             sscanf(input, "%s", name);

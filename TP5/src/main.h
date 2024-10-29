@@ -18,6 +18,8 @@ typedef struct {
     } value;
 } Variable;
 
+void trim(char *str);
+
 VarType get_type(const char *value);
 
 void set_variable(const char *name, VarType type, const char *value);
