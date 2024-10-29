@@ -188,6 +188,7 @@ void print_rules() {
     printf("La valeur de x sera remplacée par la valeur de la variable appelée, une valeur dure peut être mise aussi.\n");
     printf("Exemple : (lambda x.x + 1) 2\n");
     printf("Exemple : (lambda x.2 + 3 * x) y\n");
+    printf("Veuillez ne pas mettre de parenthèses dans l'expression lambda.\n");
     printf("\n-----------------------------------------------\n\n");
 }
 
