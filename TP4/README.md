@@ -1,16 +1,8 @@
 # Bibliothèques
-stdio.h
-stdlib.h
-string.h
-
-# Références
-*
-*
+* stdio.h
+* stdlib.h
+* string.h
 
 # Difficulté
-*
-
-# Commentaires
-* 
-* 
+* Moyen
 
