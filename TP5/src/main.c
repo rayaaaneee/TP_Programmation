@@ -198,25 +198,32 @@ int main() {
 
     char input[100];
     do {
+        // Afficher le prompt
         printf("> ");
         fgets(input, 100, stdin);
         input[strlen(input) - 1] = '\0';
+        // On gère la sortie du programme
         if (strcmp(input, "exit") == 0) {
             break;
         }
+        // On gère les affectations de variables
         if (strstr(input, "=") != NULL) {
             char name[MAX_NAME_LEN];
             char value[MAX_VALUE_LEN];
             char type[10];
             sscanf(input, "%s = %s", name, value);
             set_variable(name, get_type(value), value);
+        // On gère les expressions lambda
         } else if (strstr(input, "lambda") != NULL) {
             char expr[100];
             char called_var[MAX_NAME_LEN];
             
+            // On vérifie si l'expression lambda est bien formatée
+            // On récupère l'expression et la variable appelée (peut etre une valeur dure)
             if (sscanf(input, "(lambda x.%[^)]) %s", expr, called_var) == 2) {
-
+                // On vérifie si la variable appelée est une valeur dure
                 if (isdigit(called_var[0])) {
+                    // remplacer x par la valeur de la variable appelée dans l'expression
                     char expr_with_replaced_var[100];
                     strcpy(expr_with_replaced_var, expr);
                     char *pos = strstr(expr_with_replaced_var, "x");
@@ -226,14 +233,14 @@ int main() {
                         memcpy(pos, called_var, strlen(called_var));
                         pos = strstr(pos + strlen(called_var), "x");
                     }
-                    strcpy(expr, expr_with_replaced_var);
-                    
+                    strcpy(expr, expr_with_replaced_var); 
                 } else {
-                    // remplacer x par la valeur de la variable appelée
+                    // remplacer x par la valeur de la variable appelée dans l'expression
                     char expr_with_replaced_var[100];
                     strcpy(expr_with_replaced_var, expr);
                     for (int i = 0; i < variableCount; i++) {
                         if (strcmp(symbolTable[i].name, called_var) == 0) {
+                            // Selon le type de la variable appelée, on remplace x par la valeur de la variable
                             switch (symbolTable[i].type) {
                                 case INTEGER:
                                 case REAL:
@@ -263,6 +270,7 @@ int main() {
             } else {
                 printf("Erreur : expression lambda mal formatée.\n");
             }  
+        // On affiche la valeur d'une variable si elle existe
         } else {
             char name[MAX_NAME_LEN];
             sscanf(input, "%s", name);
