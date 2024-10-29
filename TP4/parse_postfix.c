@@ -56,6 +56,8 @@ char *parse_postfix(char *infix) {
                 depiler(&operateurs);
             }
             i++;
+        } else if (infix[i] == ' ') {
+            i++;
         } else {
             printf("Caractère non reconnu.\n");
             i++;
